@@ -119,13 +119,15 @@ func (r *reader) Read(b []byte) (n int, err error) {
 			var nonce [chacha20.DraftNonceSize]byte
 			binary.LittleEndian.PutUint64(nonce[:], r.counter+1)
 
-			r.cipher, err = chacha20.NewDraft(key[:], nonce[:])
+			var c cipher.Stream
+			c, err = chacha20.NewDraft(key[:], nonce[:])
 			if err != nil {
 				break
 			}
 
-			r.counter++
+			r.cipher = c
 			r.budget = budget
+			r.counter++
 		}
 
 		todo := len(b)
