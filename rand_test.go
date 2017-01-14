@@ -180,7 +180,7 @@ func TestLongRead(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var scratch, zero [1024 * 1024 * 1024]byte
+	var scratch [1024 * 1024 * 1024]byte
 
 	n, err := r.Read(scratch[:])
 	if err != nil {
@@ -191,9 +191,13 @@ func TestLongRead(t *testing.T) {
 		t.Errorf("expected read to return %d bytes, got %d", len(scratch), n)
 	}
 
-	if bytes.Equal(scratch[:], zero[:]) {
-		t.Error("read failed")
+	for _, v := range scratch[:] {
+		if v != 0 {
+			return
+		}
 	}
+
+	t.Error("read failed")
 }
 
 func testReseed(t *testing.T, partway bool) {
