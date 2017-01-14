@@ -13,7 +13,6 @@ import (
 	"bytes"
 	"compress/flate"
 	"errors"
-	"fmt"
 	"io"
 	"testing"
 	"testing/quick"
@@ -71,7 +70,7 @@ func TestVectors(t *testing.T) {
 	t.Parallel()
 
 	for i, vector := range testVectors {
-		fmt.Printf("running test vector %d\n", i)
+		t.Logf("running test vector %d\n", i)
 
 		r, err := New(vector.seed)
 		if err != nil {
@@ -87,9 +86,9 @@ func TestVectors(t *testing.T) {
 		}
 
 		if !bytes.Equal(data, vector.expect) {
-			fmt.Println("invalid output")
-			fmt.Printf("\texpected %x\n", vector.expect)
-			fmt.Printf("\tgot      %x\n", data)
+			t.Error("invalid output")
+			t.Logf("\texpected %x\n", vector.expect)
+			t.Logf("\tgot      %x\n", data)
 		}
 	}
 }
