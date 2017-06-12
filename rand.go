@@ -51,12 +51,6 @@ var (
 	// bytes that can be read in a single call to
 	// XORKeyStream (along with (*reader).budget).
 	zero [1024 * 1024]byte
-
-	// firstNonce is an array of zeros to serve as the
-	// nonce in New. Future nonces (on reseed) will be
-	// successive little endian integers - with this
-	// being the integer zero.
-	firstNonce [chacha20.DraftNonceSize]byte
 )
 
 // Read is a helper function that calls Reader.Read using
@@ -87,7 +81,9 @@ func New(seed []byte) (io.Reader, error) {
 		}
 	}
 
-	c, err := chacha20.NewDraft(seed, firstNonce[:])
+	var nonce [chacha20.DraftNonceSize]byte
+
+	c, err := chacha20.NewDraft(seed, nonce[:])
 	if err != nil {
 		return nil, err
 	}
