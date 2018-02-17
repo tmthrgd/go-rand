@@ -8,6 +8,7 @@ package main
 import (
 	"flag"
 	"io"
+	"log"
 	"os"
 
 	"github.com/tmthrgd/go-rand"
@@ -34,6 +35,6 @@ func main() {
 	}
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
