@@ -12,7 +12,7 @@ A cryptographically secure pseudo-random number generator built from ChaCha20.
 ```
 BenchmarkCryptoRand-8   	      20	  63222315 ns/op	  16.59 MB/s	[crypto/rand]
 BenchmarkMathRand-8     	     500	   2572662 ns/op	 407.58 MB/s	[math/rand]
-BenchmarkReader-8       	    2000	    732662 ns/op	1431.19 MB/s	[tmthrgd/go-rand - AVX only]
+BenchmarkReader-8       	    2000	    777531 ns/op        1348.60 MB/s	[tmthrgd/go-rand - AVX only]
 ```
 
 ## License

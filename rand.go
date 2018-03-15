@@ -14,13 +14,13 @@ import (
 	"io"
 	"sync"
 
-	"github.com/tmthrgd/chacha20"
+	"github.com/aead/chacha20/chacha"
 )
 
 const (
 	// SeedSize is the required length of seed passed
 	// to New.
-	SeedSize = chacha20.KeySize
+	SeedSize = chacha.KeySize
 
 	// budget is the number of bytes that can be
 	// generated from a freshly seeded generator
@@ -81,9 +81,9 @@ func New(seed []byte) (io.Reader, error) {
 		}
 	}
 
-	var nonce [chacha20.DraftNonceSize]byte
+	var nonce [chacha.NonceSize]byte
 
-	c, err := chacha20.NewDraft(seed, nonce[:])
+	c, err := chacha.NewCipher(nonce[:], seed, 20)
 	if err != nil {
 		return nil, err
 	}
@@ -109,14 +109,14 @@ func (r *reader) Read(b []byte) (n int, err error) {
 
 	for len(b) != 0 {
 		if r.budget == 0 {
-			var key [chacha20.KeySize]byte
+			var key [chacha.KeySize]byte
 			r.cipher.XORKeyStream(key[:], key[:])
 
-			var nonce [chacha20.DraftNonceSize]byte
+			var nonce [chacha.NonceSize]byte
 			binary.LittleEndian.PutUint64(nonce[:], r.counter+1)
 
 			var c cipher.Stream
-			c, err = chacha20.NewDraft(key[:], nonce[:])
+			c, err = chacha.NewCipher(nonce[:], key[:], 20)
 			if err != nil {
 				break
 			}
