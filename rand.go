@@ -81,7 +81,7 @@ func New(seed []byte) (io.Reader, error) {
 		}
 	}
 
-	var nonce [chacha.NonceSize]byte
+	var nonce [chacha.INonceSize]byte
 
 	c, err := chacha.NewCipher(nonce[:], seed, 20)
 	if err != nil {
@@ -112,7 +112,7 @@ func (r *reader) Read(b []byte) (n int, err error) {
 			var key [chacha.KeySize]byte
 			r.cipher.XORKeyStream(key[:], key[:])
 
-			var nonce [chacha.NonceSize]byte
+			var nonce [chacha.INonceSize]byte
 			binary.LittleEndian.PutUint64(nonce[:], r.counter+1)
 
 			var c cipher.Stream
